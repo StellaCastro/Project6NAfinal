@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+
 import java.util.ArrayList;
 
 
+
 public class NewArrayAdapter extends ArrayAdapter<NewsClass> {
+    private static final String DATE_DIVIDER = "T";
 
     public NewArrayAdapter(Activity context, ArrayList<NewsClass> newsList){
         // Here, we initialize the ArrayAdapter's internal storage for the context and the list.
@@ -32,23 +35,28 @@ public class NewArrayAdapter extends ArrayAdapter<NewsClass> {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.news_list_item, parent, false);
         }
-        // Get the {@link AndroidFlavor} object located at this position in the list
         NewsClass currentNews = getItem(position);
 
-        // Find the TextView with view ID title
         TextView titleView = (TextView) listItemView.findViewById(R.id.title);
-        // Display the title of the current news in that TextView
-        titleView.setText(currentNews.getTittle());
+        titleView.setText(currentNews.getTitle());
 
-        // Find the TextView with view ID title
         TextView topicView = (TextView) listItemView.findViewById(R.id.topic);
-        // Display the topic of the current news in that TextView
-        titleView.setText(currentNews.getTopic());
+        topicView.setText(currentNews.getTopic());
 
+        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
 
+        authorView.setText(currentNews.getAuthor());
+        // here we are removing the time from the date and placing it in the text view
+        String datePublished = currentNews.getDate();
+        String date;
+        String[] parts = datePublished.split(DATE_DIVIDER);
+        date = "Date: " + parts[0];
+       TextView dateView = (TextView) listItemView.findViewById(R.id.date);
+       dateView.setText(date);
 
-        // Return the list item view that is now showing the appropriate data
         return listItemView;
     }
+
+
 
 }

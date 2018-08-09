@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Project6NA</string>
-    <string name="app_label">News App</string>
+    <string name="app_label">Eco News</string>
     <string name="no_news">No news to show at the moment</string>
     <string name="no_internet_connection">Issues connecting to the Internet</string>
+    <string name="read_more">Read more</string>
 </resources>

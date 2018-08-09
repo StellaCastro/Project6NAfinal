@@ -19,76 +19,89 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
-     * Helper methods related to requesting and receiving news data from the url.
-     */
     public final class QueryUtils {
 
         /** Tag for the log messages */
         private static final String LOG_TAG = QueryUtils.class.getSimpleName();
-
-        /**
-         * Create a private constructor because no one should ever create a {@link QueryUtils} object.
-         * This class is only meant to hold static variables and methods, which can be accessed
-         * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
-         */
         private QueryUtils() {
         }
 
-        /**
-         * Query the USGS dataset and return a list of {@link NewsClass} objects.
-         */
-        public static List<NewsClass> fetchEnvironmetalNewsData(String requestUrl) {
-            // Create URL object
-            URL url = createUrl(requestUrl);
 
-            // Perform HTTP request to the URL and receive a JSON response back
+        public static List<NewsClass> fetchEcoNewsData(String requestUrl) {
+
+            // Create URL object
+            URL newsUrl = createUrl(requestUrl);
             String jsonResponse = null;
             try {
-                jsonResponse = makeHttpRequest(url);
+                jsonResponse = makeHttpRequest(newsUrl);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Problem making the HTTP request.", e);
             }
 
-            // Extract relevant fields from the JSON response and create a list of {@link NewsClass}s
-            List<NewsClass> newsList = extractFeatureFromJson(jsonResponse);
-
-            // Return the list of {@link news list}s
+            // Here we start extracting the data
+            List<NewsClass> newsList = extractEcoNews(jsonResponse);
             return newsList;
         }
-    /**
-     * Returns new URL object from the given string URL.
-     */
-    private static URL createUrl(String stringUrl) {
-        URL url = null;
-        try {
-            url = new URL(stringUrl);
-        } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Problem building the URL ", e);
+    private static List<NewsClass> extractEcoNews(String jsonResponse) {
+        // Checking if JSON string is empty or null.
+        if (TextUtils.isEmpty(jsonResponse)) {
+            return null;
         }
-        return url;
-    }
+        List<NewsClass> newsList = new ArrayList<>();
+        try {
+            JSONObject rootJsonResponse = new JSONObject(jsonResponse);
+            JSONObject rootJSONResponseResult = rootJsonResponse.getJSONObject("response");
+            JSONArray newsArray = rootJSONResponseResult.getJSONArray("results");
 
-    /**
-     * Make an HTTP request to the given URL and return a String as the response.
-     */
+
+            // here we start looping inside of the array
+            for (int i = 0; i < newsArray.length(); i++) {
+
+                // Get a single news at position i within the list of news
+                // grabbing the title, topic and url from each element in the JSONArray
+                JSONObject currentEcoNews = newsArray.getJSONObject(i);
+
+                String news_title = currentEcoNews.getString("webTitle");
+                String news_topic = currentEcoNews.getString("sectionName");
+                String publishDate = currentEcoNews.getString("webPublicationDate");
+                String news_url = currentEcoNews.getString("webUrl");
+                JSONArray tagsArray = currentEcoNews.getJSONArray("tags");
+                JSONObject author = tagsArray.getJSONObject(0);
+              String news_author = author.getString("webTitle");
+
+
+
+                // here we are creating a new object with the title and topic,
+                // and url from the JSON response.
+                NewsClass newsResponse = new NewsClass(news_title, news_topic, news_url, publishDate, news_author);
+                newsList.add(newsResponse);
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
+        }
+
+        // Return the list of news
+        return newsList;
+    }
+    //here we are making the Http Request
     private static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
 
-        // If the URL is null, then return early.
+        // Checking for null
         if (url == null) {
             return jsonResponse;
         }
 
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
+        //here we create the connection to the http
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(10000 );
+            urlConnection.setConnectTimeout(15000 );
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
             if (urlConnection.getResponseCode() == 200) {
@@ -104,18 +117,12 @@ import java.util.List;
                 urlConnection.disconnect();
             }
             if (inputStream != null) {
-                // Closing the input stream could throw an IOException, which is why
-                // the makeHttpRequest(URL url) method signature specifies than an IOException
-                // could be thrown.
                 inputStream.close();
             }
         }
         return jsonResponse;
     }
-    /**
-     * Convert the {@link InputStream} into a String which contains the
-     * whole JSON response from the server.
-     */
+    // here we are creating the string builder preferable for our case
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
@@ -130,64 +137,15 @@ import java.util.List;
         return output.toString();
     }
 
-    /**
-     * Return a list of {@link NewsClass} objects that has been built up from
-     * parsing a JSON response.
-     */
-    private static List<NewsClass> extractFeatureFromJson(String environmentalNewsJSON) {
-        // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(environmentalNewsJSON)) {
-            return null;
-        }
-
-        // Create an empty ArrayList that we can start adding news to
-        List<NewsClass> newsList = new ArrayList<>();
-
-        // Try to parse the JSON response string. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+   //here we are telling the app what to do if the url has and issue
+    private static URL createUrl(String stringUrl) {
+        URL url = null;
         try {
-
-            // Create a JSONObject from the JSON response string
-            JSONObject baseJsonResponse = new JSONObject(environmentalNewsJSON);
-
-
-            // Extract the JSONArray associated with the key called "results",
-            // which represents a list of results (or news).
-            JSONArray newsArray = baseJsonResponse.getJSONArray("results");
-
-            // For each newa in the newsArray, create an {@link news} object
-            for (int i = 0; i < newsArray.length(); i++) {
-
-                // Get a single news at position i within the list of news
-                JSONObject currentNews = newsArray.getJSONObject(i);
-
-
-                // Extract the value for the key called "webTitle"
-                String news_title = currentNews.getString("webTitle");
-
-                // Extract the value for the key called "sectionName"
-                String news_topic = currentNews.getString("sectionName");
-
-                // Extract the value for the key called "url"
-                String news_url = currentNews.getString("url");
-
-                // Create a new {@link NewsClass} object with the title and topic,
-                // and url from the JSON response.
-                NewsClass newsResponce = new NewsClass(news_title, news_topic, news_url);
-
-                // Add the new {@link newsClass object} to the list of news.
-                newsList.add(newsResponce);
-            }
-
-        } catch (JSONException e) {
-            // If an error is thrown when executing any of the above statements in the "try" block,
-            // catch the exception here, so the app doesn't crash. Print a log message
-            // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Problem building the URL ", e);
         }
-
-        // Return the list of news
-        return newsList;
+        return url;
     }
+
 }

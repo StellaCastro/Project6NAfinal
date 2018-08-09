@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/background_color"
     android:layout_height="match_parent"
     tools:context=".NewsActivity">
 
@@ -11,10 +12,12 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:divider="@color/colorAccent"
+        android:padding="@dimen/paddin_10"
+        android:background="@color/list_color"
+        android:dividerHeight="@dimen/dh_1"/>
 
-    <!-- Empty view is only visible when the list has no items. -->
+
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"

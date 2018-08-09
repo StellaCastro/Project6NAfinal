@@ -1,57 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="@dimen/margin_10"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
 
-    <LinearLayout
-        android:layout_weight="5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Stella saved the world!"
-            android:textSize="18sp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginBottom="@dimen/margin_10"
             android:id="@+id/title"
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Environmental Science"
-            android:id="@+id/topic"/>
-    </LinearLayout>
-        <ImageView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="right"
-            android:src="@drawable/ic_open_in_browser_black_24dp"/>
-    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_width="@dimen/w_0"
             android:layout_height="wrap_content"
-            android:text="By:Jeidan Velazquez"
-            android:id="@+id/author"/>
+            android:text="@string/app_name"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/topic"/>
         <TextView
             android:layout_weight="1"
-            android:layout_width="0dp"
-            android:gravity="right"
+            android:layout_width="@dimen/w_0"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_open_in_browser_black_24dp"
             android:layout_height="wrap_content"
-            android:text="July 21, 2018"
-            android:id="@+id/date"/>
+            android:text="@string/read_more"
+            />
     </LinearLayout>
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorPrimaryDark"
+        android:id="@+id/author"/>
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        android:textColor="@color/colorPrimaryDark"
+        android:id="@+id/date"/>
 
 
 </LinearLayout>
