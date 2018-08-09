@@ -43,6 +43,7 @@ import java.util.List;
             return newsList;
         }
     private static List<NewsClass> extractEcoNews(String jsonResponse) {
+        String news_author = "No author available";
         // Checking if JSON string is empty or null.
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
@@ -60,16 +61,12 @@ import java.util.List;
                 // Get a single news at position i within the list of news
                 // grabbing the title, topic and url from each element in the JSONArray
                 JSONObject currentEcoNews = newsArray.getJSONObject(i);
-
                 String news_title = currentEcoNews.getString("webTitle");
                 String news_topic = currentEcoNews.getString("sectionName");
                 String publishDate = currentEcoNews.getString("webPublicationDate");
                 String news_url = currentEcoNews.getString("webUrl");
-                JSONArray tagsArray = currentEcoNews.getJSONArray("tags");
-                JSONObject author = tagsArray.getJSONObject(0);
-              String news_author = author.getString("webTitle");
-
-
+                JSONObject ecoFields = currentEcoNews.getJSONObject("fields");
+                news_author = ecoFields.getString("byline");
 
                 // here we are creating a new object with the title and topic,
                 // and url from the JSON response.

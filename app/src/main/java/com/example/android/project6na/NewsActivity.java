@@ -22,7 +22,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderCallbacks<L
     public static final String LOG_TAG = NewsActivity.class.getName();
     //our URL
     private static final String ENVIRONMENTAL_NEWS_URL =
-            "https://content.guardianapis.com/search?q=ecology&api-key=e2f3ffb7-87fe-439a-983f-83c82a9783ea";
+            "https://content.guardianapis.com/search?show-fields=thumbnail%2Cbyline&q=ecology&api-key=e2f3ffb7-87fe-439a-983f-83c82a9783ea";
    //declaring the different variables that we need in this activity
     private static final int NEWS_LOADER_ID = 1;
     private NewArrayAdapter mAdapter;

@@ -45,7 +45,7 @@ public class NewArrayAdapter extends ArrayAdapter<NewsClass> {
 
         TextView authorView = (TextView) listItemView.findViewById(R.id.author);
 
-        authorView.setText(currentNews.getAuthor());
+        authorView.setText("By: " + currentNews.getAuthor());
         // here we are removing the time from the date and placing it in the text view
         String datePublished = currentNews.getDate();
         String date;
